@@ -7,6 +7,7 @@ import { getCookie, setCookie } from "hono/cookie";
 import { cors } from "hono/cors";
 import { sign, verify } from "hono/jwt";
 import { logger } from "hono/logger";
+import { addUser, checkUser } from "./lib/users-repo";
 const app = new Hono();
 
 app.use("*", logger());
@@ -21,10 +22,28 @@ app.use(
 
 app.get("/", (c) => c.text("Hono!"));
 
+app.post("/sign-up", async (c) => {
+  const body = await c.req.json();
+  try {
+    const res = await addUser(body.email, body.password);
+    const { id, email, role } = res?.[0];
+    return c.json({ ok: "true", data: { id, email, role } }, 200);
+  } catch (e) {
+    return c.json({ ok: "false", error: e }, 403);
+  }
+});
+
 app.post("/sign-in", async (c) => {
   const body = await c.req.json();
 
-  if (body.email === "suraj" && body.password === "suraj1294") {
+  if (!body.email || !body.password) {
+    return c.json({ ok: "false", error: "bad request" }, 404);
+  }
+
+  //check if user exists
+  const isValid = await checkUser(body.email, body.password);
+
+  if (isValid) {
     const expiresAt = Math.floor(Date.now() / 1000) + 15 * 60; //15 minute
 
     const payload = {

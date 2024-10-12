@@ -5,9 +5,17 @@
   "scripts": {
     "start": "bun run index.ts"
   },
-  "dependencies": { "@elysiajs/swagger": "^0.6.2", "elysia": "^0.6.24", "hono": "^4.6.4" },
+  "dependencies": {
+    "@elysiajs/swagger": "^0.6.2",
+    "drizzle-orm": "^0.34.1",
+    "elysia": "^0.6.24",
+    "hono": "^4.6.4",
+    "pg": "^8.13.0"
+  },
   "devDependencies": {
-    "bun-types": "latest"
+    "@types/pg": "^8.11.10",
+    "bun-types": "latest",
+    "drizzle-kit": "^0.25.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
