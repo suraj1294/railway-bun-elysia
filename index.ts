@@ -3,9 +3,73 @@
  */
 
 import { Hono } from "hono";
+import { getCookie, setCookie } from "hono/cookie";
+import { cors } from "hono/cors";
+import { sign, verify } from "hono/jwt";
+import { logger } from "hono/logger";
 const app = new Hono();
 
+app.use("*", logger());
+
+app.use(
+  "*",
+  cors({
+    origin: JSON.parse(process.env.CORS_ORIGIN ?? "[]"),
+    credentials: true,
+  })
+);
+
 app.get("/", (c) => c.text("Hono!"));
+
+app.post("/sign-in", async (c) => {
+  const body = await c.req.json();
+
+  if (body.email === "suraj" && body.password === "suraj1294") {
+    const expiresAt = Math.floor(Date.now() / 1000) + 15 * 60; //15 minute
+
+    const payload = {
+      sub: body.email,
+      exp: expiresAt,
+    };
+
+    const token = await sign(payload, process.env.JWT_SECRET as string);
+
+    const expires = new Date(expiresAt * 1000);
+
+    setCookie(c, "__Session", token, {
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      expires,
+      sameSite: "None",
+    });
+
+    return c.json({ ok: "true", token }, 200);
+  } else {
+    return c.json({ ok: "false", error: "invalid username or password" }, 403);
+  }
+});
+
+app.get("/profile", async (c) => {
+  const token = getCookie(c, "__Session");
+
+  if (token) {
+    try {
+      const payload = await verify(token, process.env.JWT_SECRET as string);
+      return c.json(payload);
+    } catch (e: any) {
+      console.log(e?.name);
+      return c.json({ ok: "false", message: "unauthorized" }, 401);
+    }
+  } else {
+    console.log("here");
+    return c.json({ ok: "false", message: "unauthorized" }, 401);
+  }
+});
+app.onError(async (err, c) => {
+  console.log(err);
+  return c.json("internal server error", 500);
+});
 
 export default {
   fetch: app.fetch,
