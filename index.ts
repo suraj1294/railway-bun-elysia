@@ -7,21 +7,24 @@ const app = new Hono();
 
 app.get("/", (c) => c.text("Hono!"));
 
-export default app;
+export default {
+  fetch: app.fetch,
+  port: process.env.PORT ?? 3000,
+};
 
 /**
  * Bun Server
  */
 
-const server = Bun.serve({
-  hostname: "::",
-  port: process.env.PORT ?? 3000,
-  fetch(request) {
-    return new Response("Welcome to Bun!");
-  },
-});
+// const server = Bun.serve({
+//   hostname: "::",
+//   port: process.env.PORT ?? 3000,
+//   fetch(request) {
+//     return new Response("Welcome to Bun!");
+//   },
+// });
 
-console.log(`Listening on http://localhost:${server.port}`);
+// console.log(`Listening on http://localhost:${server.port}`);
 
 // ------------------------------------------------------------------------------------------------//
 /**
