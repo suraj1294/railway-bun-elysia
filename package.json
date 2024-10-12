@@ -5,7 +5,7 @@
   "scripts": {
     "start": "bun run index.ts"
   },
-  "dependencies": { "@elysiajs/swagger": "^0.6.2", "elysia": "^0.6.24" },
+  "dependencies": { "@elysiajs/swagger": "^0.6.2", "elysia": "^0.6.24", "hono": "^4.6.4" },
   "devDependencies": {
     "bun-types": "latest"
   },

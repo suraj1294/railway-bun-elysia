@@ -1,3 +1,18 @@
+/**
+ * Hono App
+ */
+
+import { Hono } from "hono";
+const app = new Hono();
+
+app.get("/", (c) => c.text("Hono!"));
+
+export default app;
+
+/**
+ * Bun Server
+ */
+
 const server = Bun.serve({
   hostname: "::",
   port: process.env.PORT ?? 3000,
@@ -7,6 +22,11 @@ const server = Bun.serve({
 });
 
 console.log(`Listening on http://localhost:${server.port}`);
+
+// ------------------------------------------------------------------------------------------------//
+/**
+ * Elysia App
+ */
 
 // import { Elysia, t } from "elysia";
 // import { swagger } from "@elysiajs/swagger";
