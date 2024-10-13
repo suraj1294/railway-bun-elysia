@@ -3,7 +3,10 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "bun run index.ts"
+    "start:dev": "bun run index.ts",
+    "start": "./server",
+    "build": "bun build --compile --minify --sourcemap --bytecode ./path/to/my/app.ts --outfile server",
+    "dev": "bun run -c index.ts"
   },
   "dependencies": {
     "@elysiajs/swagger": "^0.6.2",
