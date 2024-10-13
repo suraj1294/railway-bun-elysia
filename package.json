@@ -5,7 +5,7 @@
   "scripts": {
     "start:dev": "bun run index.ts",
     "start": "./server",
-    "build": "bun build --compile --minify --sourcemap --bytecode ./path/to/my/app.ts --outfile server",
+    "build": "bun build --compile --minify --sourcemap --bytecode index.ts --outfile server",
     "dev": "bun run -c index.ts"
   },
   "dependencies": {
